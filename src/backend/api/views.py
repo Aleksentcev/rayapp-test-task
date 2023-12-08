@@ -1,8 +1,9 @@
 from asgiref.sync import async_to_sync
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, mixins
 from djoser.views import UserViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+import requests
 
 from .permissions import IsAuthorOrAdminOrReadOnly
 from .serializers import CustomUserSerializer, PostSerializer
@@ -44,3 +45,29 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(
             {'error': 'Ошибка'}, status=status.HTTP_400_BAD_REQUEST
         )
+
+
+class RandomUserCreateViewSet(
+    mixins.ListModelMixin, viewsets.GenericViewSet
+):
+    def list(self, request):
+        url = 'https://randomuser.me/api/'
+        response = requests.get(url)
+
+        if response.status_code == status.HTTP_200_OK:
+            data = response.json()['results'][0]
+
+            User.objects.create(
+                username=data['login']['username'],
+                email=data['email'],
+                first_name=data['name']['first'],
+                last_name=data['name']['last'],
+                password=data['login']['password']
+            )
+
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {'message': 'Не удалось получить данные'},
+                status=response.status_code
+            )

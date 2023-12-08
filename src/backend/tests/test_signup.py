@@ -12,12 +12,12 @@ class TestSignUpAPI:
         response = client.post(self.url_signup)
 
         assert response.status_code != HTTPStatus.NOT_FOUND, (
-            f'Эндпоинт `{self.url_signup}` не найден. Проверьте *urls.py*.'
+            f'Эндпоинт `{self.url_signup}` не найден. Проверьте *urls.py*'
         )
 
         assert response.status_code == HTTPStatus.BAD_REQUEST, (
             f'Если POST-запрос на `{self.url_signup}`, не содержит данных, '
-            'должен вернуться ответ со статусом 400.'
+            'должен вернуться ответ со статусом 400'
         )
 
         response_json = response.json()
@@ -33,7 +33,7 @@ class TestSignUpAPI:
             ), (
                 f'Если в POST-запросе к `{self.url_signup}` не переданы '
                 'необходимые данные, в ответе должна возвращаться информация '
-                'об обязательных для заполнения полях.'
+                'об обязательных для заполнения полях'
             )
 
     def test_signup_with_invalid_data(self, client, django_user_model):
@@ -67,7 +67,7 @@ class TestSignUpAPI:
                     and isinstance(response_json.get(field), list)), (
                 f'Если в  POST-запросе к `{self.url_signup}` переданы '
                 'некорректные данные, в ответе должна возвращаться информация '
-                'о неправильно заполненных полях.'
+                'о неправильно заполненных полях'
             )
 
     def test_signup_with_valid_data(self, client, django_user_model):

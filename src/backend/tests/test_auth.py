@@ -13,16 +13,16 @@ class TestTokenAuthAPI:
             data={'email': user.email, 'password': password}
         )
         assert response.status_code != HTTPStatus.NOT_FOUND, (
-            'Страница "/api/auth/token/login" не найдена, проверьте *urls.py*.'
+            'Страница "/api/auth/token/login" не найдена, проверьте *urls.py*'
         )
         assert response.status_code == HTTPStatus.OK, (
             'Проверьте, что POST-запрос к "/api/auth/token/login" '
-            'возвращает ответ с кодом 200.'
+            'возвращает ответ с кодом 200'
         )
         auth_data = response.json()
         assert 'auth_token' in auth_data, (
             'Проверьте, что ответ на POST-запрос с верными данными к '
-            '"/api/auth/token/login" содержит токен.'
+            '"/api/auth/token/login" содержит токен'
         )
 
         response_with_error = client.post(
@@ -32,7 +32,7 @@ class TestTokenAuthAPI:
 
         assert response_with_error.status_code == HTTPStatus.BAD_REQUEST, (
             'Проверьте, что POST-запрос к "/api/auth/token/login" '
-            'с неполнымми данными возвращает ответ с кодом 400.'
+            'с неполнымми данными возвращает ответ с кодом 400'
         )
 
     def test_auth_token_logout(self, user_client, token):
@@ -44,12 +44,12 @@ class TestTokenAuthAPI:
 
         assert response.status_code != HTTPStatus.NOT_FOUND, (
             'Страница "/api/auth/token/logout" не найдена, '
-            'проверьте *urls.py*.'
+            'проверьте *urls.py*'
         )
 
         assert response.status_code == HTTPStatus.NO_CONTENT, (
             'Проверьте, что POST-запрос к "/api/auth/token/logout" '
-            'возвращает ответ с кодом 204.'
+            'возвращает ответ с кодом 204'
         )
 
         data = response.data
@@ -66,5 +66,5 @@ class TestTokenAuthAPI:
 
         assert response_expired_token.status_code == HTTPStatus.UNAUTHORIZED, (
             'Проверьте, что повторный запрос c удалённым токеном '
-            'возвращает ответ с кодом 401.'
+            'возвращает ответ с кодом 401'
         )

@@ -87,7 +87,7 @@ class TestPostsAPI:
         response = client.get(post_detail_url)
 
         assert response.status_code != HTTPStatus.NOT_FOUND, (
-            f'Эндпоинт `{post_detail_url}` не найден. Проверьте *urls.py*.'
+            f'Эндпоинт `{post_detail_url}` не найден. Проверьте *urls.py*'
         )
 
         assert response.status_code == HTTPStatus.OK, (

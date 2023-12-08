@@ -4,7 +4,7 @@ volumes:
   testtask_pg_data:
   static:
   media:
-  # app_value:
+  app_value:
 
 services:
   testtask_db:
@@ -13,9 +13,9 @@ services:
     volumes:
       - testtask_pg_data:/var/lib/postgresql/data
 
-  # redis:
-  #   image: redis:latest
-  #   restart: always
+  redis:
+    image: redis:latest
+    restart: always
 
   backend:
     build:
@@ -27,16 +27,16 @@ services:
     depends_on:
       - testtask_db
 
-  # celery:
-  #   build:
-  #     context: ../backend/
-  #   command: celery -A test_task worker --loglevel=info
-  #   env_file: .env
-  #   volumes:
-  #     - app_value:/app
-  #   depends_on:
-  #     - backend
-  #     - redis
+  celery:
+    build:
+      context: ../backend/
+    command: celery -A test_task worker --loglevel=info
+    env_file: .env
+    volumes:
+      - app_value:/app
+    depends_on:
+      - backend
+      - redis
   
   nginx:
     image: nginx:1.19.3
