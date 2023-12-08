@@ -1,5 +1,4 @@
 import os
-import sys
 from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
@@ -163,6 +162,3 @@ DJOSER = {
 
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', '')
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', '')
-
-
-RANDOM_USER_URL = 'https://randomuser.me/api/'
