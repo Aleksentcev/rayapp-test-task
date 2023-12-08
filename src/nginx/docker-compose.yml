@@ -1,0 +1,49 @@
+version: '3.8'
+
+volumes:
+  testtask_pg_data:
+  static:
+  media:
+  # app_value:
+
+services:
+  testtask_db:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - testtask_pg_data:/var/lib/postgresql/data
+
+  # redis:
+  #   image: redis:latest
+  #   restart: always
+
+  backend:
+    build:
+      context: ../backend/
+      dockerfile: Dockerfile
+    env_file: .env
+    volumes:
+      - static:/backend_static
+    depends_on:
+      - testtask_db
+
+  # celery:
+  #   build:
+  #     context: ../backend/
+  #   command: celery -A test_task worker --loglevel=info
+  #   env_file: .env
+  #   volumes:
+  #     - app_value:/app
+  #   depends_on:
+  #     - backend
+  #     - redis
+  
+  nginx:
+    image: nginx:1.19.3
+    env_file: .env
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static:/staticfiles/
+      - media:/media

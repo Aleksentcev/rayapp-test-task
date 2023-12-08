@@ -19,15 +19,6 @@ class CustomUserSerializer(UserSerializer):
         model = User
 
 
-class Base64ImageField(serializers.ImageField):
-    def to_internal_value(self, data):
-        if isinstance(data, str) and data.startswith('data:image'):
-            format, imgstr = data.split(';base64,')
-            ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
-        return super().to_internal_value(data)
-
-
 class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta:
         fields = (
@@ -41,6 +32,17 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         model = User
 
 
+class Base64ImageField(serializers.ImageField):
+    def to_internal_value(self, data):
+
+        if isinstance(data, str) and data.startswith('data:image'):
+            format, imgstr = data.split(';base64,')
+            ext = format.split('/')[-1]
+            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+
+        return super().to_internal_value(data)
+
+
 class PostSerializer(serializers.ModelSerializer):
     author = CustomUserSerializer(read_only=True)
     image = Base64ImageField(max_length=None, use_url=True)
@@ -52,5 +54,10 @@ class PostSerializer(serializers.ModelSerializer):
             'name',
             'image',
             'text',
+            'pub_date',
         )
         model = Post
+
+    def create(self, validated_data):
+        author = self.context.get('request').user
+        return Post.objects.create(**validated_data, author=author)
