@@ -1,4 +1,5 @@
 from asgiref.sync import async_to_sync
+from django.conf import settings
 from rest_framework import viewsets, permissions, status, mixins
 from djoser.views import UserViewSet
 from rest_framework.decorators import action
@@ -51,7 +52,7 @@ class RandomUserCreateViewSet(
     mixins.ListModelMixin, viewsets.GenericViewSet
 ):
     def list(self, request):
-        url = 'https://randomuser.me/api/'
+        url = settings.RANDOM_USER_URL
         response = requests.get(url)
 
         if response.status_code == status.HTTP_200_OK:
